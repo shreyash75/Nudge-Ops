@@ -1,0 +1,9 @@
+# Kubernetes secrets
+k8s/secret/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.tfvars
