@@ -1,0 +1,29 @@
+# Scenario 1: CrashLoopBackOff caused by a missing required environment variable.
+# The container starts, hits the missing variable, and exits immediately.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nudgeops-crashloop
+  namespace: nudgeops-test
+  labels:
+    app: nudgeops-crashloop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nudgeops-crashloop
+  template:
+    metadata:
+      labels:
+        app: nudgeops-crashloop
+    spec:
+      containers:
+        - name: app
+          image: busybox:stable
+          command:
+            - sh
+            - -c
+            - |
+              echo "Starting application..."
+              echo "Value: ${REQUIRED_SETTING:?REQUIRED_SETTING environment variable is missing}"
+              sleep 3600

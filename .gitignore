@@ -1,9 +1,20 @@
-# Kubernetes secrets
-k8s/secret/
+.env
+.env.*
+!.env.example
 
-# Terraform
-.terraform/
-*.tfstate
-*.tfstate.*
-crash.log
-terraform.tfvars
+venv/
+.venv/
+node_modules/
+.next/
+__pycache__/
+*.pyc
+
+backend/data/
+*.db
+.kube/
+kubeconfig
+*.tsbuildinfo
+.insforge/
+AGENTS.md
+opencode.jsonc
+prompts/

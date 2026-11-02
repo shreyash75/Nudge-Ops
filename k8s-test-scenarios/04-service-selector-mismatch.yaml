@@ -1,0 +1,40 @@
+# Scenario 4: Service selector mismatch.
+# The deployment's pods carry the label app=nudgeops-svc-v2, while the service
+# selects app=nudgeops-svc-v1. The service therefore has zero endpoints and
+# traffic routed to it is dropped.
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: nudgeops-svc
+  namespace: nudgeops-test
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app: nudgeops-svc-v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nudgeops-svc-mismatch
+  namespace: nudgeops-test
+  labels:
+    app: nudgeops-svc-v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nudgeops-svc-v2
+  template:
+    metadata:
+      labels:
+        app: nudgeops-svc-v2
+    spec:
+      containers:
+        - name: app
+          image: nginx:stable-alpine
+          ports:
+            - containerPort: 8080

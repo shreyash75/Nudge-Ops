@@ -1,0 +1,38 @@
+# Scenario 3: OOMKilled caused by a memory limit far below real usage.
+# The container allocates and holds ~100MB of memory in its shell while the
+# limit is 8Mi, so the kubelet terminates it again and again with OOMKilled.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nudgeops-oom
+  namespace: nudgeops-test
+  labels:
+    app: nudgeops-oom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nudgeops-oom
+  template:
+    metadata:
+      labels:
+        app: nudgeops-oom
+    spec:
+      containers:
+        - name: app
+          image: busybox:stable
+          command:
+            - sh
+            - -c
+            - |
+              echo "Allocating memory..."
+              BLOB=$(
+                head -c 100M /dev/zero | base64
+              )
+              echo "Holding ~133MB in memory"
+              sleep 3600
+          resources:
+            limits:
+              memory: 8Mi
+            requests:
+              memory: 8Mi
