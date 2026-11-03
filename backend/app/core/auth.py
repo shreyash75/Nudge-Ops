@@ -28,7 +28,7 @@ def _resolve_secret() -> bytes:
     if settings.auth_secret.strip():
         return settings.auth_secret.strip().encode()
 
-    path = Path(settings.auth_database_path).parent / "jwt-secret.key"
+    path = Path(settings.jwt_secret_path)
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         if path.exists():

@@ -7,11 +7,13 @@ from loguru import logger
 from app.api import api_router
 from app.core.config import settings
 from app.core.logging import setup_logging
+from app.db import database
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     setup_logging()
+    database.ensure_schema()
     logger.info("NudgeOps backend started")
     yield
     logger.info("NudgeOps backend stopped")

@@ -72,7 +72,7 @@ NudgeOps follows a modular architecture with five primary layers:
 - **Log & Event Analysis:** Collect and analyze Kubernetes logs and events to identify failure patterns.
 - **AI-Powered RCA:** Correlate multiple diagnostic signals to determine probable root causes.
 - **Remediation Suggestions:** Generate actionable troubleshooting steps and recommended configuration changes.
-- **Investigation History:** Maintain records of previous investigations and their findings.
+- **Investigation History:** Maintain records of previous investigations and their findings, stored in self-managed PostgreSQL (users and history; schema baseline in `migrations/self-managed-postgres/`).
 - **Live Progress Tracking:** Display investigation stages and results through the dashboard.
 
 ## Supported Failure Scenarios

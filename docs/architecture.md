@@ -13,7 +13,7 @@ Kubernetes investigation (pods, logs, events, deployments, network)
         |
 AI reasoning (OpenRouter)
         |
-Diagnosis shown to user and saved to InsForge
+Diagnosis shown to user and saved to PostgreSQL
 ```
 
 ## Current status
@@ -22,11 +22,12 @@ Diagnosis shown to user and saved to InsForge
 - Authenticated `POST /investigate` evidence collection via kubectl
 - AI root-cause analysis with confidence and kubectl recommendations
 - Next.js dashboard with login, live progress, diagnosis, and history
-- FastAPI-managed email/password accounts (JWT HS256, SQLite user store), live
+- FastAPI-managed email/password accounts (JWT HS256), live
   progress over Server-Sent Events (`GET /investigate/progress/{id}?token=`)
-- InsForge used only for investigation history storage (server API key; the
-  `auth.users` foreign key on `investigation_history` is dropped)
-- Docker Compose
+- Self-managed PostgreSQL stores users and investigation history
+  (`DATABASE_URL`; schema baseline in `migrations/self-managed-postgres/`,
+  created idempotently at backend startup)
+- Docker Compose with a PostgreSQL service (persistent volume + healthcheck)
 
 ## Reliability guarantees
 

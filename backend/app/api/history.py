@@ -10,6 +10,6 @@ router = APIRouter(tags=["investigation-history"])
 def investigation_history(
     user: AuthenticatedUser = Depends(require_authenticated_user),
 ) -> list[dict]:
-    """Return the user's investigation history stored in InsForge."""
+    """Return the user's investigation history stored in PostgreSQL."""
 
-    return load_investigation_history(user.id, user.email)
+    return load_investigation_history(user.id)

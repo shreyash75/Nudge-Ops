@@ -1,4 +1,20 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nudgeops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nudgeops}
+      POSTGRES_DB: ${POSTGRES_DB:-nudgeops}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./migrations/self-managed-postgres:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
   backend:
     build:
       context: ./backend
@@ -9,15 +25,15 @@ services:
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-}
       KUBECONFIG_PATH: ${KUBECONFIG_PATH:-}
       BACKEND_CORS_ORIGINS: http://localhost:3000
-      INSFORGE_URL: ${INSFORGE_URL:-}
-      INSFORGE_API_KEY: ${INSFORGE_API_KEY:-}
-      INSFORGE_HISTORY_TABLE: ${INSFORGE_HISTORY_TABLE:-investigation_history}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://nudgeops:nudgeops@postgres:5432/nudgeops}
       AUTH_SECRET: ${AUTH_SECRET:-}
-      AUTH_DATABASE_PATH: ${AUTH_DATABASE_PATH:-data/app_users.db}
     volumes:
       - "${KUBECONFIG_FILE:-${USERPROFILE}/.kube/config}:/root/.kube/config:ro"
       - "${AWS_CONFIG_DIR:-${USERPROFILE}/.aws}:/root/.aws:ro"
       - backend-data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 
   frontend:
@@ -34,4 +50,5 @@ services:
     restart: unless-stopped
 
 volumes:
+  postgres-data:
   backend-data:

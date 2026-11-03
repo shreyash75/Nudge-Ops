@@ -8,11 +8,9 @@ class Settings(BaseSettings):
     openrouter_model: str = ""
     kubeconfig_path: str = ""
     backend_cors_origins: str = "http://localhost:3000"
-    insforge_url: str = ""
-    insforge_api_key: str = ""
-    insforge_history_table: str = "investigation_history"
+    database_url: str = "postgresql+psycopg://nudgeops:nudgeops@localhost:5432/nudgeops"
     auth_secret: str = ""
-    auth_database_path: str = "data/app_users.db"
+    jwt_secret_path: str = "data/jwt-secret.key"
     auth_token_expire_minutes: int = 60 * 24 * 7
 
     model_config = SettingsConfigDict(

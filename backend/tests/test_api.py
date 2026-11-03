@@ -70,7 +70,7 @@ def test_history_endpoint_returns_saved_rows(monkeypatch):
     monkeypatch.setattr(
         history_api,
         "load_investigation_history",
-        lambda user_id, email: saved_rows,
+        lambda user_id: saved_rows,
     )
     response = client.get("/investigate/history")
     assert response.status_code == 200
